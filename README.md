@@ -1,36 +1,29 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# 프로젝트 이름
 
-## Getting Started
+이 프로젝트는 Next.js, Tailwind CSS, 그리고 TypeScript를 기반으로 구축된 웹 애플리케이션 템플릿입니다.
 
-First, run the development server:
+## 주요 기술 스택
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- **Next.js**: 서버 사이드 렌더링(SSR), 정적 사이트 생성(SSG), API 라우트 등 현대적 웹 애플리케이션을 구축하는 데 필요한 모든 기능을 제공합니다.
+- **Tailwind CSS**: 유틸리티-퍼스트 CSS 프레임워크로, 빠르게 맞춤 디자인을 구현할 수 있습니다.
+- **TypeScript**: JavaScript에 타입을 추가하여 더 안전하고 예측 가능한 코드를 작성할 수 있게 해 줍니다.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 패키지 매니저
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+이 프로젝트에서는 `pnpm`을 사용하여 의존성을 관리합니다. `pnpm`은 빠르고 효율적인 패키지 매니징을 제공합니다.
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+## 테스트 도구
 
-## Learn More
+프로젝트는 다음과 같은 테스트 도구를 사용하여 개발의 품질을 보장합니다:
 
-To learn more about Next.js, take a look at the following resources:
+- **Jest**: 자바스크립트 테스팅 프레임워크로, 단위 및 통합 테스트를 위해 사용됩니다.
+- **@testing-library/react**: 리액트 컴포넌트의 테스트를 더 사용자 친화적으로 진행할 수 있게 도와줍니다.
+- **Storybook**: 컴포넌트 단위로 UI를 독립적으로 개발하고 테스트할 수 있는 환경을 제공합니다.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 시작하기
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+이 프로젝트를 로컬 환경에서 실행하기 위한 단계는 다음과 같습니다:
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+1. 저장소를 클론합니다:
+   ```bash
+   git clone https://example.com/your-project.git
