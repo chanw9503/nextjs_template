@@ -29,41 +29,40 @@ jobs:
 
       - name: 현재 Next.js 버전 확인
         id: current_version
-        run: echo "::set-output name=version::$(pnpm list next | grep next@ | sed 's/.*next@//')"
+        run: echo "version=$(pnpm list next | grep next@ | sed 's/.*next@//')" >> $GITHUB_ENV
 
       - name: 최신 Next.js 버전 확인
         id: latest_version
-        run: echo "::set-output name=version::$(pnpm info next version)"
+        run: echo "version=$(pnpm info next version)" >> $GITHUB_ENV
 
       - name: 버전 비교
         id: compare_versions
         run: |
-          if [ "${{ steps.current_version.outputs.version }}" != "${{ steps.latest_version.outputs.version }}" ]; then
+          if [ "${{ env.version }}" != "${{ env.latest_version }}" ]; then
             echo "새 버전이 있습니다."
-            echo "::set-output name=update_needed::true"
+            echo "update_needed=true" >> $GITHUB_ENV
           else
             echo "업데이트가 필요하지 않습니다."
-            echo "::set-output name=update_needed::false"
-          fi
+            echo "update_needed=false" >> $GITHUB_ENV
 
       - name: Next.js 버전 업데이트
-        if: steps.compare_versions.outputs.update_needed == 'true'
+        if: env.update_needed == 'true'
         run: |
           git fetch origin main
           git checkout main
           git pull origin main
-          git checkout -b update-nextjs
+          git checkout -B update-nextjs
           pnpm add next@latest
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           pnpm install
           git add package.json pnpm-lock.yaml
 
-      - name: 커밋 및 푸시
-        if: steps.compare_versions.outputs.update_needed == 'true'
+      - name: 커밋 및 초기 푸시
+        if: env.update_needed == 'true'
         run: |
           if [ -n "$(git status --porcelain)" ]; then
-            git commit -m "chore: update Next.js to ${{ steps.latest_version.outputs.version }}"
+            git commit -m "chore: update Next.js to ${{ env.latest_version }}"
             git push https://x-access-token:${{ secrets.GH_TOKEN }}@github.com/${{ github.repository }}.git update-nextjs --force
           else
             echo "변경 사항이 없어 푸시하지 않습니다."
@@ -71,11 +70,11 @@ jobs:
           fi
 
       - name: 풀 리퀘스트 생성
-        if: steps.compare_versions.outputs.update_needed == 'true'
+        if: env.update_needed == 'true'
         uses: peter-evans/create-pull-request@v3
         with:
           token: ${{ secrets.GH_TOKEN }}
           branch: update-nextjs
           base: main
-          title: 'chore: update Next.js to ${{ steps.latest_version.outputs.version }}'
-          body: 'This PR updates Next.js to version ${{ steps.latest_version.outputs.version }}.'
+          title: 'chore: update Next.js to ${{ env.latest_version }}'
+          body: 'This PR updates Next.js to version ${{ env.latest_version }}.'
