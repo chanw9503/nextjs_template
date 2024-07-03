@@ -59,8 +59,16 @@ jobs:
           pnpm install
           git add package.json pnpm-lock.yaml
           git commit -m "chore: update Next.js to ${{ steps.latest_version.outputs.version }}"
-          git pull origin update-nextjs --rebase || git merge --abort
-          git push https://x-access-token:${{ secrets.GH_TOKEN }}@github.com/${{ github.repository }}.git update-nextjs --force
+
+      - name: 변경 사항 푸시
+        if: steps.compare_versions.outputs.update_needed == 'true'
+        run: |
+          if [ "$(git status --porcelain)" != "" ]; then
+            git push https://x-access-token:${{ secrets.GH_TOKEN }}@github.com/${{ github.repository }}.git update-nextjs --force
+          else
+            echo "변경 사항이 없어 푸시하지 않습니다."
+            exit 0
+          fi
 
       - name: 풀 리퀘스트 생성
         if: steps.compare_versions.outputs.update_needed == 'true'
