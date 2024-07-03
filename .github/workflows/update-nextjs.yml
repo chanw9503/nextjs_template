@@ -19,7 +19,7 @@ jobs:
       - name: Node.js 설정
         uses: actions/setup-node@v2
         with:
-          node-version: '20' # Node.js 버전을 지정
+          node-version: '16' # Node.js 버전을 지정
 
       - name: pnpm 설치
         run: npm install -g pnpm
@@ -56,13 +56,13 @@ jobs:
           pnpm install
           git add package.json pnpm-lock.yaml
           git commit -m "chore: update Next.js to ${{ steps.latest_version.outputs.version }}"
-          git push origin update-nextjs
+          git push https://x-access-token:${{ secrets.GH_TOKEN }}@github.com/${{ github.repository }}.git update-nextjs
 
       - name: 풀 리퀘스트 생성
         if: steps.compare_versions.outputs.update_needed == 'true'
         uses: peter-evans/create-pull-request@v3
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.GH_TOKEN }}
           branch: update-nextjs
-          title: "chore: update Next.js to ${{ steps.latest_version.outputs.version }}"
-          body: "This PR updates Next.js to version ${{ steps.latest_version.outputs.version }}."
+          title: 'chore: update Next.js to ${{ steps.latest_version.outputs.version }}'
+          body: 'This PR updates Next.js to version ${{ steps.latest_version.outputs.version }}.'
