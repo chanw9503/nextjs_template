@@ -19,7 +19,7 @@ jobs:
       - name: Node.js 설정
         uses: actions/setup-node@v2
         with:
-          node-version: '20' # Node.js 버전을 지정
+          node-version: '16' # Node.js 버전을 지정
 
       - name: pnpm 설치
         run: npm install -g pnpm
@@ -49,14 +49,18 @@ jobs:
       - name: Next.js 버전 업데이트
         if: steps.compare_versions.outputs.update_needed == 'true'
         run: |
+          git fetch origin main
+          git checkout main
+          git pull origin main
+          git checkout -b update-nextjs
           pnpm add next@latest
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git checkout -b update-nextjs
           pnpm install
           git add package.json pnpm-lock.yaml
           git commit -m "chore: update Next.js to ${{ steps.latest_version.outputs.version }}"
-          git push https://x-access-token:${{ secrets.GH_TOKEN }}@github.com/${{ github.repository }}.git update-nextjs
+          git pull --rebase origin update-nextjs || true
+          git push https://x-access-token:${{ secrets.GH_TOKEN }}@github.com/${{ github.repository }}.git update-nextjs --force
 
       - name: 풀 리퀘스트 생성
         if: steps.compare_versions.outputs.update_needed == 'true'
@@ -64,5 +68,6 @@ jobs:
         with:
           token: ${{ secrets.GH_TOKEN }}
           branch: update-nextjs
+          base: main
           title: 'chore: update Next.js to ${{ steps.latest_version.outputs.version }}'
           body: 'This PR updates Next.js to version ${{ steps.latest_version.outputs.version }}.'
